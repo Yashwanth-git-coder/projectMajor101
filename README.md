@@ -90,5 +90,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Contact
 
 If you have any questions or suggestions about the project, please open an issue or contact the project maintainers.
+Owner: Yashwanth (yashwanthshivaraju3@gmail.com)
 
 Happy coding!
