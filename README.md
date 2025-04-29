@@ -56,15 +56,12 @@ Major101 is an open-source accommodation booking platform inspired by Airbnb. Th
    # Install backend dependencies
    npm install
 
-
-3. Set up environment variables (see [Environment Variables](#environment-variables))
-
-4. Run the development server
+3. Run the development server
    ```bash
    # Start backend server
    nodemon app.js
 
-5. Open your browser and navigate to `http://localhost:8080`
+4. Open your browser and navigate to `http://localhost:8080`
 
 ### Contribution Guidelines
 
