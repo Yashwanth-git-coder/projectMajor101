@@ -10,14 +10,15 @@
             name="listing[title]" 
             placeholder="Add a bold title"
             type="text" 
-            class="form-control" />
+            class="form-control" 
+            required />
         </div>
         
         <div class="mb-3">
           <label for="description" class="form-label">Description: </label>
           <textarea 
             name="listing[description]" 
-            class="form-control">
+            class="form-control" required>
           </textarea>
         </div>
 
@@ -26,7 +27,7 @@
           <input 
             name="listing[image]" 
             placeholder="enter a URL / Link"
-            type="text" class="form-control"/>
+            type="text" class="form-control" required/>
         </div>
 
         <div class="mb-3">
@@ -37,12 +38,12 @@
         <div class="row">
           <div class="mb-3 col-4">
             <label for="description" class="form-label">Country: </label>
-            <input name="listing[country]" placeholder="India" type="text" class="form-control">
+            <input name="listing[country]" placeholder="India" type="text" class="form-control" required>
           </div>
           
           <div class="mb-3 col-8">
             <label for="description" class="form-label">Location: </label>
-            <input name="listing[location]" type="text" placeholder="Bengaluru" class="form-control">
+            <input name="listing[location]" type="text" placeholder="Bengaluru" class="form-control" required>
           </div>
 
         </div>
