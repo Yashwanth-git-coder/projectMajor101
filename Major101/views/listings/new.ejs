@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-8 offset-2">
       <h3>Create a New Listing</h3>
-      <form method="POST" action="/listings">
+      <form method="POST" action="/listings" novalidate class="needs-validation">
         <div class="mb-3">
           <label for="title" class="form-label">Enter Title: </label>
           <input 
@@ -12,14 +12,19 @@
             type="text" 
             class="form-control" 
             required />
+            <div class="valid-feedback">Title looks Good!</div>
+            <div class="invalid-feedback">Title not looks Good!</div>
         </div>
         
         <div class="mb-3">
           <label for="description" class="form-label">Description: </label>
           <textarea 
             name="listing[description]" 
-            class="form-control" required>
-          </textarea>
+            class="form-control" 
+            required
+          ></textarea>
+          <div class="valid-feedback">Description looks Good!</div>
+          <div class="invalid-feedback">Description not looks Good!</div>
         </div>
 
         <div class="mb-3">
@@ -27,23 +32,29 @@
           <input 
             name="listing[image]" 
             placeholder="enter a URL / Link"
-            type="text" class="form-control" required/>
+            type="text" class="form-control"/>
         </div>
 
         <div class="mb-3">
           <label for="description" class="form-label">Price: </label>
-          <input name="listing[price]" type="number" placeholder="2000" class="form-control"> 
+          <input name="listing[price]" type="number" placeholder="2000" class="form-control" required> 
+          <div class="valid-feedback">Price looks Good!</div>
+          <div class="invalid-feedback">Price not looks Good!</div>
         </div>
 
         <div class="row">
           <div class="mb-3 col-4">
             <label for="description" class="form-label">Country: </label>
             <input name="listing[country]" placeholder="India" type="text" class="form-control" required>
+            <div class="valid-feedback">Country looks Good!</div>
+            <div class="invalid-feedback">Country not looks Good!</div>
           </div>
           
           <div class="mb-3 col-8">
             <label for="description" class="form-label">Location: </label>
             <input name="listing[location]" type="text" placeholder="Bengaluru" class="form-control" required>
+            <div class="valid-feedback">Location looks Good!</div>
+            <div class="invalid-feedback">Location not looks Good!</div>
           </div>
 
         </div>
