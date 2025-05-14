@@ -1,15 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const ejs = require("ejs");
-const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const Joi = require('joi');
-const {listingSchema, reviewSchema} = require("./schema.js");
-const Review = require("./models/review.js");
+
+
+const listings = require("./routes/listing.js")
+const reviews = require("./routes/review.js")
 
 
 
@@ -40,133 +39,15 @@ app.get("/", (req, res) => {
     res.send("all working good!")
 });
 
-const validateListing = (req, res, next) => {
-  let { error } = listingSchema.validate(req.body);
-  if (error) {
-    let errMsg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(400, errMsg);
-    // return res.status(400).send(error.details[0].message);
-  }else{
-  next();
-  }
-};
 
 
-const validatereview = (req, res, next) => {
-  let { error } = reviewSchema.validate(req.body);
-  if (error) {
-    let errMsg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(400, errMsg);
-    // return res.status(400).send(error.details[0].message);
-  }else{
-  next();
-  }
-};
 
-//Index Route
-app.get("/listings", wrapAsync(async (req, res) => {
-  const allListings = await Listing.find({});
-  // console.log(listing.location);
-  res.render("listings/index.ejs", { allListings });
-}));
-
-//New Route
-app.get("/listings/new", (req, res) => {
-  res.render("listings/new.ejs");
-});
-
-//Show Route
-app.get("/listings/:id", wrapAsync(async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id).populate("reviews");
-  console.log(listing.location);
-  console.log(listing.image);
-  res.render("listings/show.ejs", { listing });
-}));
+app.use("/listings", listings);
 
 
-// Create Route
-app.post("/listings", validateListing, wrapAsync(async (req, res) => {
-  
-  const data = req.body.listing;
-
-  const newListing = new Listing({
-    ...data,
-    image: {
-      url: data.image || "",  // Wrap the plain string into an object
-      filename: ""
-    }
-  });
-
-  await newListing.save();
-  res.redirect("/listings");
-}));
+app.use("/listings/:id/reviews", reviews);
 
 
-//Edit Route
-app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-  res.render("listings/edit.ejs", { listing });
-}));
-
-//Update Route
-app.put("/listings/:id", validateListing, wrapAsync(async (req, res) => {
-  let { id } = req.params;
-  await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-  res.redirect(`/listings/${id}`);
-}));
-
-//Delete Route
-app.delete("/listings/:id", wrapAsync(async (req, res) => {
-  let { id } = req.params;
-  let deletedListing = await Listing.findByIdAndDelete(id);
-  console.log(deletedListing);
-  res.redirect("/listings");
-}));
-
-
-// Reviwes
-// Post Route
-app.post("/listings/:id/reviews", validatereview, wrapAsync(async (req, res) => {
-  let listing = await Listing.findById(req.params.id);
-  let newReview = new Review(req.body.review);
-
-  listing.reviews.push(newReview);
-
-  await newReview.save();
-  await listing.save();
- 
-  res.redirect(`/listings/${listing._id}`);
-
-}));
-
-//Delete Review Route
-
-app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req, res) => {
-  let {id, reviewId} = req.params;
-
-  await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
-  await Review.findByIdAndDelete(reviewId);
-
-  res.redirect(`/listings/${id}`);
-}))
-
-
-// app.get("/testListing", async (req, res) => {
-//     let sampleListing = new Listing({
-//         title: "My new Villa",
-//         description: "By the beach",
-//         price: 1220,
-//         location: "Calangute, Goa",
-//         country: "India",
-//     });
-
-//     await sampleListing.save();
-//     console.log("Samole was saved");
-//     res.send("Succussfull testing!");
-
-// });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
