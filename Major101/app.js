@@ -8,7 +8,9 @@ const Joi = require('joi');
 
 
 const listings = require("./routes/listing.js")
-const reviews = require("./routes/review.js")
+const reviews = require("./routes/review.js");
+const session = require("express-session");
+const flash = require("connect-flash");
 
 
 
@@ -32,14 +34,31 @@ app.use(methodOverride("_method"));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
-
+const sessionOptions = {
+  secret: "mysecrectcode",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  }
+};
 
 
 app.get("/", (req, res) => {
-    res.send("all working good!")
+  res.send("all working good!")
 });
 
 
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+});
 
 
 app.use("/listings", listings);
