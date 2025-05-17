@@ -9,7 +9,7 @@
         <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="listing_image">
 
         <div class="card-body">
-
+          <p class="card-text">Owned by <i><%= listing.owner.username %></i></p>
           <p class="card-text">
             <%= listing.description %> <br>
             &#8377; <%= listing.price.toLocaleString("en-IN") %> <br>
@@ -22,6 +22,8 @@
 
       
       <br />
+
+      <% if(currUser && currUser._id.equals(listing.owner._id)) { %>
       <div class="btns">
 
         <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-1 offset-2 add-btn">Edit</a>
@@ -31,8 +33,12 @@
         </form>
       
       </div>
+
+      <% } %>
   <br><br>
 <hr>
+
+<% if(currUser) { %>
 <div class="col-8 offset-3 mb-3">
   <h4>Leave a Review</h4>
   <form 
@@ -54,18 +60,22 @@
   </form>
 </div>
 
+<% } %>
+
 <h4>All Reviews</h4>
 
 <div class="row">
   <% for (review of listing.reviews) {%>
   <div class="card col-5 ms-3 mb-3">
     <div class="card-body">
-      <h5 class="card-title">Yashwanth</h5>
+      <h5 class="card-title">
+        @<%= review.author.username %>
+      </h5>
       <p class="card-text"><%= review.comment %></p>
       <p class="card-text"><b><%= review.rating %> </b> stars</p>
       <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" class="mb-3">
         <button class="btn btn-sm btn-dark">Delete</button>
-      </form>
+        </form>
     </div>
   </div>
   <% } %>
