@@ -8,6 +8,11 @@ const {isLoggedIn, isOwner} = require("../middleware.js")
 
 const listingController = require("../controllers/listing.js");
 
+const multer  = require('multer');
+
+const {storage} = require("../cloudconfig.js");
+const upload = multer({ storage });
+
 
 const validateListing = (req, res, next) => {
   let { error } = listingSchema.validate(req.body);
@@ -32,7 +37,8 @@ router.get("/new", isLoggedIn, listingController.rederNewForm);
 router.get("/:id", wrapAsync(listingController.showListings));
 
 // Create Route
-router.post("/", wrapAsync(listingController.createRoute));
+router.post("/", isLoggedIn, upload.single('listing[image]'), wrapAsync(listingController.createRoute));
+
 
 //Edit Route
 router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(listingController.editRoute));
