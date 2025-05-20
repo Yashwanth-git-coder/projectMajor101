@@ -50,16 +50,31 @@ module.exports.editRoute = async (req, res) => {
       req.flash("error", "Listing you requested does not exist!");
       return res.redirect("/listings"); // ✅ Add `return` here
     }
-    res.render("listings/edit.ejs", { listing });
+
+    let originalImageUrl = listing.image.url;
+    originalImageUrl.replace("/upload", "/upload/h_300, w_250");
+    res.render("listings/edit.ejs", { listing, originalImageUrl });
 };
 
 module.exports.updateRoute = async (req, res) => {
-    let { id } = req.params;
+  const { id } = req.params;
   
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-    req.flash("success", "Listing Updated!");
-    res.redirect(`/listings/${id}`);
+  // update text fields
+  const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+
+  // if they did upload a file, overwrite the image
+  if (req.file) {
+    listing.image = {
+      url:      req.file.path,
+      filename: req.file.filename
+    };
+    await listing.save();
+  }
+
+  req.flash("success", "Listing Updated!");
+  res.redirect(`/listings/${id}`);
 };
+
 
 module.exports.deleteRoute =async (req, res) => {
     let { id } = req.params;

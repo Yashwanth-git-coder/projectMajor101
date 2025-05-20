@@ -3,14 +3,17 @@ const Joi = require('joi');
 
 module.exports.listingSchema = Joi.object({
   listing: Joi.object({
-    title: Joi.string().required(),
+    title:       Joi.string().required(),
     description: Joi.string().allow(""),
+    // ← make image optional, and validate both url & filename if present
     image: Joi.object({
-      url: Joi.string().uri().allow("").required()
-    }).required(),
-    price: Joi.number().required(),
+      url:      Joi.string().uri().required(),
+      filename: Joi.string().required()
+    })
+      .optional(),          // ← no longer required on updates
+    price:    Joi.number().required(),
     location: Joi.string().required(),
-    country: Joi.string().required()
+    country:  Joi.string().required()
   }).required()
 });
 

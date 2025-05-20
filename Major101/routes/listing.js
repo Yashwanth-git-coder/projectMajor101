@@ -44,7 +44,7 @@ router.post("/", isLoggedIn, upload.single('listing[image]'), wrapAsync(listingC
 router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(listingController.editRoute));
 
 //Update Route
-router.put("/:id", isLoggedIn, isOwner, validateListing, wrapAsync(listingController.updateRoute));
+router.put("/:id", isLoggedIn, isOwner, upload.single('listing[image]'), validateListing, wrapAsync(listingController.updateRoute));
 
 //Delete Route
 router.delete("/:id", isLoggedIn, isOwner, wrapAsync(listingController.deleteRoute));

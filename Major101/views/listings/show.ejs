@@ -44,7 +44,7 @@
 
 <% if(currUser) { %>
 <div class="col-8 offset-3 mb-3">
-  <h4>Leave a Review</h4>
+  <h3>Leave a Review</h3>
   <form 
     action="/listings/<%= listing.id %>/reviews" 
     method="POST" 
@@ -73,7 +73,7 @@
 
     <div class="mb-3 mt-3">
       <label for="comment" class="form-label">Comments</label>
-      <textarea name="review[comment]" id="comment" cols="30" rows="6" class="form-control" required></textarea>
+      <textarea name="review[comment]" id="comment" cols="30" rows="4" class="form-control" required></textarea>
       <div class="invalid-feedback">PLease Enter some Comment!</div>
     </div>
     <button class="btn btn-outline-dark">Submit</button>
@@ -82,26 +82,72 @@
 
 <% } %>
 
-<h4>All Reviews</h4>
+</div>
 
-<div class="row">
-  <% for (review of listing.reviews) {%>
-  <div class="card col-5 ms-3 mb-3">
-    <div class="card-body">
-      <h5 class="card-title">
-        @<%= review.author.username %>
-      </h5>
-      <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
-      <p class="card-text"><%= review.comment %></p>
-      
-      <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" class="mb-3">
-        <button class="btn btn-sm btn-dark">Delete</button>
-        </form>
+<% if (listing.reviews.length > 0) { %>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 mb-4">
+      <h3 class="fw-bold text-dark">All Reviews</h3>
     </div>
   </div>
-  <% } %>
+
+  <div class="row justify-content-center">
+    <% for (review of listing.reviews) { %>
+      <div class="col-md-3 col-sm-10 mb-2">
+        <div class="card p-3 shadow-sm border rounded">
+          <div class="card-body">
+            <h5 class="card-title">@<%= review.author.username %>
+            </h5>
+
+            <!-- Star Rating (EJS logic to show stars) -->
+            <div class="mb-2">
+              <% for (let i=1; i <=5; i++) { %>
+                <% if (i <=review.rating) { %>
+                  <i class="fas fa-star text-warning"></i>
+                  <% } else { %>
+                    <i class="far fa-star text-warning"></i>
+                    <% } %>
+                      <% } %>
+            </div>
+
+            <p class="card-text">
+              <%= review.comment %>
+            </p>
+
+            <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+              <button class="btn btn-dark btn-sm">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <% } %>
+  </div>
 </div>
+
+
+<hr>
+
+<% } %>
+
+<div class="container my-5">
+<div class="row justify-content-center">
+  <div class="col-md-8 mb-4">
+    <h3 class="fw-bold text-dark">Where you'll be:</h3>
+  </div>
+  <div id="map"></div>
+  
 </div>
+
+<script>
+  let mapToken = "<%= process.env.MAP_TOKEN %>";
+  mapboxgl.accessToken = mapToken
+  const map = new mapboxgl.Map({
+    container: 'map', // container ID
+    center: [-74.5, 40], // starting position [lng, lat]. Note that lat must be set between -90 and 90
+    zoom: 9 // starting zoom
+  });
+</script>
    
 
 
